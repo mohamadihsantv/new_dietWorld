@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Modern Elegant Design -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary: #6366f1;
+        --primary-light: #818cf8;
+        --primary-dark: #4f46e5;
+        --secondary: #f43f5e;
+        --accent: #f59e0b;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --success: #10b981;
+    }
+    
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc;
+        color: #1e293b;
+    }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    
+    .gradient-bg {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    }
+    
+    .hover-scale {
+        transition: all 0.3s ease;
+    }
+    
+    .hover-scale:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-link {
+        position: relative;
+    }
+    
+    .nav-link:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: var(--primary);
+        transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover:after {
+        width: 100%;
+    }
+    
+    .active-nav {
+        color: var(--primary);
+    }
+    
+    .active-nav:after {
+        width: 100%;
+    }
+
+    .product-scroll {
+        max-height: 200px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary-light) var(--light);
+    }
+
+    .product-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .product-scroll::-webkit-scrollbar-track {
+        background: var(--light);
+    }
+
+    .product-scroll::-webkit-scrollbar-thumb {
+        background-color: var(--primary-light);
+        border-radius: 6px;
+    }
+</style>
+
+<div class="min-h-screen flex">
+    <!-- Elegant Sidebar -->
+    <div class="w-64 bg-white shadow-xl">
+        <div class="p-6 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary-light flex items-center justify-center">
+                <i class="fas fa-store text-white text-lg"></i>
+            </div>
+            <h1 class="text-xl font-bold text-dark">{{ shop.shop_name }}</h1>
+        </div>
+        
+        <nav class="mt-8 px-4 space-y-1">
+            <a href="{% url 'shop_dashboard' %}" class="flex items-center px-4 py-3 text-dark font-medium rounded-lg nav-link active-nav">
+                <i class="fas fa-chart-pie mr-3 text-primary"></i>
+                Dashboard
+            </a>
+            <a href="{% url 'product_list' shop.id %}" class="flex items-center px-4 py-3 text-dark font-medium rounded-lg nav-link">
+                <i class="fas fa-boxes mr-3 text-secondary"></i>
+                Products
+            </a>
+            <a href="{% url 'add_product' %}" class="flex items-center px-4 py-3 text-dark font-medium rounded-lg nav-link">
+                <i class="fas fa-plus-circle mr-3 text-accent"></i>
+                Add Product
+            </a>
+            <a href="{% url 'shop_orders' %}" class="flex items-center px-4 py-3 text-dark font-medium rounded-lg nav-link">
+                <i class="fas fa-shopping-bag mr-3 text-success"></i>
+                Orders
+            </a>
+            <a href="{% url 'shop_profile' %}" class="flex items-center px-4 py-3 text-dark font-medium rounded-lg nav-link">
+                <i class="fas fa-cog mr-3 text-gray-500"></i>
+                Settings
+            </a>
+        </nav>
+        
+        <div class="absolute bottom-0 w-64 p-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-light overflow-hidden">
+                    {% if request.user.shop.profile_photo %}
+                        <img src="{{ request.user.shop.profile_photo.url }}" alt="Profile" class="w-full h-full object-cover">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center text-white">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-dark">{{ request.user.username }}</p>
+                    <a href="{% url 'shop_logout' %}" class="text-xs text-gray-500 hover:text-primary">Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 gradient-bg p-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-dark">Dashboard Overview</h1>
+            <button class="p-2 rounded-full bg-white shadow-sm hover:shadow-md">
+                <i class="fas fa-bell text-gray-600"></i>
+            </button>
+        </div>
+
+        <!-- Quick Actions and Total Products -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Quick Actions -->
+            <div class="glass-card hover-scale rounded-xl p-6">
+                <h3 class="text-lg font-semibold text-dark mb-4">Quick Actions</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="{% url 'add_product' %}" class="p-4 rounded-lg bg-indigo-50 text-primary hover:bg-indigo-100 transition-colors flex flex-col items-center justify-center">
+                        <i class="fas fa-plus-circle text-2xl mb-2"></i>
+                        <span class="text-sm font-medium">Add Product</span>
+                    </a>
+                    <a href="{% url 'shop_orders' %}" class="p-4 rounded-lg bg-red-50 text-secondary hover:bg-red-100 transition-colors flex flex-col items-center justify-center">
+                        <i class="fas fa-shopping-bag text-2xl mb-2"></i>
+                        <span class="text-sm font-medium">View Orders</span>
+                    </a>
+                    <a href="{% url 'product_list' shop.id %}" class="p-4 rounded-lg bg-amber-50 text-accent hover:bg-amber-100 transition-colors flex flex-col items-center justify-center">
+                        <i class="fas fa-boxes text-2xl mb-2"></i>
+                        <span class="text-sm font-medium">Manage Products</span>
+                    </a>
+                    <a href="{% url 'shop_profile' %}" class="p-4 rounded-lg bg-green-50 text-success hover:bg-green-100 transition-colors flex flex-col items-center justify-center">
+                        <i class="fas fa-cog text-2xl mb-2"></i>
+                        <span class="text-sm font-medium">Shop Settings</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Total Products Card with Product Names -->
+            <div class="glass-card hover-scale rounded-xl p-6 shadow-sm">
+                <div class="flex justify-between">
+                    <div>
+                        <p class="text-gray-500">Total Products</p>
+                        <h3 class="text-3xl font-bold mt-2">{{ products|length }}</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-indigo-50 flex items-center justify-center">
+                        <i class="fas fa-box-open text-primary text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-100">
+                    <span class="text-sm text-gray-500">Last added: {% if products %}{{ products.0.created_at|date:"M d" }}{% else %}None{% endif %}</span>
+                    {% if products %}
+                    <div class="mt-3 product-scroll">
+                        <ul class="space-y-2">
+                            {% for product in products %}
+                            <li class="flex items-center justify-between py-1 px-2 hover:bg-indigo-50 rounded">
+                                <span class="text-sm font-medium text-dark truncate">{{ product.name }}</span>
+                                <span class="text-xs text-gray-500">${{ product.price }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Products -->
+        <div class="glass-card hover-scale rounded-xl overflow-hidden shadow-sm mb-8">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                <h2 class="text-xl font-semibold text-dark">Recent Products</h2>
+                <a href="{% url 'product_list' shop.id %}" class="text-sm text-primary hover:underline flex items-center">
+                    View All <i class="fas fa-chevron-right ml-1"></i>
+                </a>
+            </div>
+            
+            {% if products %}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Calories</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for product in products|slice:":5" %}
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-md overflow-hidden bg-gray-100">
+                                        {% if product.image %}
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="h-full w-full object-cover">
+                                        {% else %}
+                                            <div class="h-full w-full flex items-center justify-center text-gray-400">
+                                                <i class="fas fa-image"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-dark">{{ product.name }}</div>
+                                        <div class="text-sm text-gray-500">{{ product.description|truncatechars:25 }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-dark">${{ product.price }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ product.calories_per_100g }} kcal</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    {% if product.stock > 10 %}bg-green-100 text-green-800
+                                    {% elif product.stock > 0 %}bg-amber-100 text-amber-800
+                                    {% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ product.stock }} in stock
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex space-x-3">
+                                    <a href="{% url 'update_product' product.id %}" class="text-primary hover:text-primary-dark">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <a href="{% url 'delete_product' product.id %}" class="text-secondary hover:text-secondary-dark">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-12 text-center">
+                <div class="mx-auto w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                    <i class="fas fa-box-open text-3xl text-gray-400"></i>
+                </div>
+                <h3 class="text-lg font-medium text-dark mb-2">No products yet</h3>
+                <p class="text-gray-500 mb-4">Get started by adding your first product to showcase</p>
+                <a href="{% url 'add_product' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-br from-primary to-primary-light hover:from-primary-dark hover:to-primary">
+                    <i class="fas fa-plus mr-2"></i> Add Product
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple JavaScript for interactivity
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight current nav link
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('nav a').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active-nav');
+            }
+        });
+        
+        // Add hover effects to all cards
+        document.querySelectorAll('.hover-scale').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-3px)';
+                card.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+                card.style.boxShadow = '';
+            });
+        });
+    });
+</script>
+{% endblock %}

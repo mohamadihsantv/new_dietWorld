@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Modern Elegant Design -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary: #3b82f6; /* blue-500 */
+        --primary-light: #93c5fd; /* blue-300 */
+        --primary-dark: #1d4ed8; /* blue-700 */
+        --secondary: #f43f5e;
+        --accent: #f59e0b;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --success: #10b981;
+    }
+    
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc;
+        color: #1e293b;
+    }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    
+    .gradient-bg {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    }
+    
+    .hover-scale {
+        transition: all 0.3s ease;
+    }
+    
+    .hover-scale:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-link {
+        position: relative;
+    }
+    
+    .nav-link:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: var(--primary);
+        transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover:after {
+        width: 100%;
+    }
+    
+    .active-nav {
+        color: var(--primary);
+    }
+    
+    .active-nav:after {
+        width: 100%;
+    }
+    
+    .btn-blue {
+        background-color: var(--primary);
+        color: white;
+    }
+    
+    .btn-blue:hover {
+        background-color: var(--primary-dark);
+    }
+    
+    .btn-white {
+        background-color: white;
+        color: var(--primary);
+        border: 1px solid var(--primary);
+    }
+    
+    .btn-white:hover {
+        background-color: #f3f4f6;
+    }
+    
+    .detail-card {
+        max-width: 600px;
+        width: 100%;
+    }
+</style>
+
+<div class="min-h-screen flex">
+    <!-- Elegant Sidebar -->
+    <div class="w-64 bg-white shadow-xl">
+        <div class="p-6 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary-light flex items-center justify-center">
+                <i class="fas fa-store text-white text-lg"></i>
+            </div>
+            <h1 class="text-xl font-bold text-dark">{{ request.user.shop.shop_name }}</h1>
+        </div>
+        
+        <nav class="mt-8 px-4 space-y-1">
+            <a href="{% url 'shop_dashboard' %}" class="flex items-center px-4 py-3 text-dark font-medium rounded-lg nav-link">
+                <i class="fas fa-chart-pie mr-3 text-primary"></i>
+                Dashboard
+            </a>
+            <a href="{% url 'product_list' shop_id=request.user.shop.id %}" class="flex items-center px-4 py-3 text-dark font-medium rounded-lg nav-link active-nav">
+                <i class="fas fa-boxes mr-3 text-secondary"></i>
+                Products
+            </a>
+            <a href="{% url 'add_product' %}" class="flex items-center px-4 py-3 text-dark font-medium rounded-lg nav-link">
+                <i class="fas fa-plus-circle mr-3 text-accent"></i>
+                Add Product
+            </a>
+            <a href="{% url 'shop_orders' %}" class="flex items-center px-4 py-3 text-dark font-medium rounded-lg nav-link">
+                <i class="fas fa-shopping-bag mr-3 text-success"></i>
+                Orders
+            </a>
+            <a href="{% url 'shop_profile' %}" class="flex items-center px-4 py-3 text-dark font-medium rounded-lg nav-link">
+                <i class="fas fa-cog mr-3 text-gray-500"></i>
+                Settings
+            </a>
+        </nav>
+        
+        <div class="absolute bottom-0 w-64 p-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-light overflow-hidden">
+                    {% if request.user.shop.profile_photo %}
+                        <img src="{{ request.user.shop.profile_photo.url }}" alt="Profile" class="w-full h-full object-cover">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center text-white">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-dark">{{ request.user.username }}</p>
+                    <a href="{% url 'shop_logout' %}" class="text-xs text-gray-500 hover:text-primary">Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 gradient-bg p-8 flex items-center justify-center">
+        <!-- Product Detail Card -->
+        <div class="glass-card hover-scale detail-card rounded-xl overflow-hidden shadow-sm">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-dark mb-4">{{ product.name }}</h1>
+                
+                <!-- Product Image -->
+                <div class="h-64 bg-gray-100 rounded-lg mb-6 flex items-center justify-center overflow-hidden">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <i class="fas fa-image text-5xl text-gray-400"></i>
+                    {% endif %}
+                </div>
+                
+                <!-- Product Details -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">Description</label>
+                        <p class="mt-1 text-dark">{{ product.description }}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Price</label>
+                            <p class="mt-1 font-bold text-dark">${{ product.price }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Calories</label>
+                            <p class="mt-1 text-dark">{{ product.calories_per_100g }} kcal/100g</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Stock</label>
+                            <p class="mt-1 text-dark">{{ product.stock }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Category</label>
+                            <p class="mt-1 text-dark">{{ product.category.name }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if product.species.all %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">Species</label>
+                        <div class="mt-1 flex flex-wrap gap-2">
+                            {% for species in product.species.all %}
+                            <span class="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                                {{ species.name }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="mt-8 pt-4 border-t border-gray-100 flex justify-between">
+                    <a href="{% url 'update_product' product.id %}" 
+                       class="inline-flex items-center px-4 py-2 rounded-md shadow-sm btn-blue">
+                        <i class="fas fa-edit mr-2"></i> Edit Product
+                    </a>
+                    <a href="{% url 'product_list' product.outlet.id %}" 
+                       class="inline-flex items-center px-4 py-2 rounded-md shadow-sm btn-white">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple JavaScript for interactivity
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight current nav link
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('nav a').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active-nav');
+            }
+        });
+        
+        // Profile dropdown toggle
+        document.getElementById('profileDropdown').addEventListener('click', function() {
+            document.getElementById('dropdownMenu').classList.toggle('hidden');
+        });
+    });
+</script>
+{% endblock %}

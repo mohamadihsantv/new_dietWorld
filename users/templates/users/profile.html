@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- CSS Imports -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+<style>
+    /* Your existing CSS styles */
+    .form-input {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(209, 213, 219, 0.2);
+        border-radius: 8px;
+        padding: 0.6rem 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        font-size: 0.9rem;
+        color: #374151;
+    }
+    
+    .form-input:focus {
+        border-color: #34d399;
+        box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.25);
+        outline: none;
+    }
+    
+    .btn-gradient {
+        background: linear-gradient(90deg, #34d399, #22d3ee);
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        font-weight: 500;
+        color: #fff;
+    }
+    
+    .btn-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+    }
+    
+    .profile-img {
+        position: relative;
+    }
+    
+    .profile-img::after {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        background: linear-gradient(45deg, #34d399, #22d3ee, #34d399);
+        background-size: 200% 200%;
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        animation: glowRotate 3s linear infinite;
+        z-index: -1;
+    }
+    
+    .profile-img:hover::after {
+        opacity: 0.5;
+    }
+    
+    @keyframes glowRotate {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+</style>
+
+<div class="min-h-screen relative" x-data="{ darkMode: false }" :data-theme="darkMode ? 'dark' : 'light'">
+    <!-- Navigation Bar -->
+    <nav class="glass-nav sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <a href="{% url 'customer_dashboard' %}" class="text-xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent tracking-tight">
+                    <i class="fas fa-leaf mr-1.5"></i>HealthyDiet
+                </a>
+                <div class="flex items-center space-x-4">
+                    <div class="toggle-btn" @click="darkMode = !darkMode" x-bind:class="darkMode ? 'bg-green-500' : 'bg-gray-300'"></div>
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" class="flex items-center space-x-2 text-gray-800 hover:text-green-600">
+                            <div class="profile-img w-9 h-9 rounded-full overflow-hidden border-2 border-green-500">
+                                <img src="{{ customer.profile_photo.url|default:'/static/default-avatar.png' }}" alt="Profile" class="w-full h-full object-cover">
+                            </div>
+                            <span class="font-medium hidden sm:inline text-base">{{ request.user.username }}</span>
+                            <i class="fas fa-chevron-down text-sm" :class="{ 'rotate-180': open }"></i>
+                        </button>
+                        <div x-show="open" @click.away="open = false" 
+                             class="absolute right-0 mt-2 w-44 glass-card p-2"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 scale-100"
+                             x-transition:leave-end="opacity-0 scale-95">
+                            <a href="{% url 'customer_profile' %}" class="block px-3 py-1.5 text-gray-800 hover:bg-green-50 rounded-lg text-sm">
+                                <i class="fas fa-user mr-2 text-green-500"></i>Profile
+                            </a>
+                            <a href="{% url 'customer_logout' %}" class="block px-3 py-1.5 text-red-500 hover:bg-red-50 rounded-lg text-sm">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+        <div class="glass-card p-6 max-w-3xl mx-auto">
+            <h2 class="text-2xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent mb-6">
+                <i class="fas fa-user-circle mr-2"></i>Your Profile
+            </h2>
+            
+            <form method="post" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+                
+                <div class="flex flex-col md:flex-row gap-6">
+                    <!-- Profile Photo -->
+                    <div class="md:w-1/3 flex flex-col items-center">
+                        <div class="profile-img mb-4">
+                            <img src="{{ customer.profile_photo.url|default:'/static/default-avatar.png' }}" 
+                                 alt="Profile" 
+                                 class="w-32 h-32 rounded-full object-cover border-4 border-green-500">
+                        </div>
+                        <div class="w-full">
+                            {{ form.profile_photo }}
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Details -->
+                    <div class="md:w-2/3 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                            <input type="text" value="{{ request.user.username }}" 
+                                   class="form-input bg-gray-100 cursor-not-allowed" disabled>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" value="{{ request.user.email }}" 
+                                   class="form-input bg-gray-100 cursor-not-allowed" disabled>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.phone_number.label }}</label>
+                            {{ form.phone_number }}
+                            {% if form.phone_number.errors %}
+                                <p class="text-red-500 text-xs mt-1">{{ form.phone_number.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.address.label }}</label>
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                                <p class="text-red-500 text-xs mt-1">{{ form.address.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end gap-3 pt-4">
+                    <a href="{% url 'customer_dashboard' %}" 
+                       class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn-gradient px-4 py-2 text-white">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Alpine.js -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+{% endblock %}

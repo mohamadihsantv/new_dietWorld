@@ -1,0 +1,10 @@
+## How to run
+
+1. Install Python.
+2. Install Django. You can refer to this link for installation:
+   [Django Installation Guide](https://github.com/JUSAIR-JSR/CRUD_DJANGO-Beginner)
+
+3. Open the project using the terminal or VS Code and run the source code:
+
+   ```bash
+   python manage.py runserver

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    poppins: ['Poppins', 'sans-serif'],
+                },
+                colors: {
+                    nutrigreen: {
+                        50: '#f0fff4',
+                        100: '#dcfce7',
+                        200: '#bbf7d0',
+                        300: '#86efac',
+                        400: '#4ade80',
+                        500: '#22c55e',
+                        600: '#16a34a',
+                        700: '#15803d',
+                        800: '#166534',
+                        900: '#14532d',
+                    },
+                    nutriblue: {
+                        50: '#eff6ff',
+                        100: '#dbeafe',
+                        200: '#bfdbfe',
+                        300: '#93c5fd',
+                        400: '#60a5fa',
+                        500: '#3b82f6',
+                        600: '#2563eb',
+                        700: '#1d4ed8',
+                        800: '#1e40af',
+                        900: '#1e3a8a',
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<div class="font-poppins bg-gradient-to-br from-nutrigreen-50 to-nutriblue-50 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+        <!-- Custom Diet/Nutrition Logo -->
+        <div class="flex flex-col items-center mb-8">
+            <div class="relative mb-4">
+                <!-- Plate with food logo -->
+                <div class="w-20 h-20 rounded-full bg-white shadow-lg flex items-center justify-center mx-auto">
+                    <div class="relative">
+                        <!-- Plate -->
+                        <div class="w-16 h-16 rounded-full bg-gray-100 border-4 border-nutrigreen-300 flex items-center justify-center">
+                            <!-- Food items -->
+                            <div class="absolute top-3 left-4 w-3 h-3 rounded-full bg-nutrigreen-500"></div>
+                            <div class="absolute top-4 right-4 w-4 h-2 rounded-full bg-nutriblue-400 transform rotate-45"></div>
+                            <div class="absolute bottom-5 left-5 w-5 h-2 rounded-full bg-yellow-400 transform -rotate-12"></div>
+                            <div class="absolute bottom-4 right-5 w-2 h-4 rounded-full bg-red-400"></div>
+                            <!-- Fork and spoon -->
+                            <div class="absolute -bottom-2 -left-2 w-1 h-6 bg-gray-400 rounded transform rotate-12"></div>
+                            <div class="absolute -bottom-2 -right-2 w-1 h-6 bg-gray-400 rounded transform -rotate-12"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="text-3xl font-bold text-nutrigreen-800">Diet<span class="text-nutriblue-600">World</span></h1>
+            <p class="text-nutrigreen-600 font-medium mt-1">Shop Owner Portal</p>
+        </div>
+
+        <!-- Login Form -->
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4">
+                    <p class="font-medium">Invalid username or password. Please try again.</p>
+                </div>
+            {% endif %}
+            
+            <!-- Username Field -->
+            <div>
+                <label for="{{ form.username.id_for_label }}" class="block text-gray-700 font-medium mb-2">Username</label>
+                <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" 
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nutrigreen-500" 
+                       placeholder="Enter your username">
+            </div>
+            
+            <!-- Password Field -->
+            <div>
+                <label for="{{ form.password.id_for_label }}" class="block text-gray-700 font-medium mb-2">Password</label>
+                <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" 
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nutrigreen-500" 
+                       placeholder="Enter your password">
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" 
+                    class="w-full bg-nutrigreen-500 hover:bg-nutrigreen-600 text-white px-6 py-3 rounded-lg transition duration-300 shadow-md hover:shadow-lg">
+                Login
+            </button>
+        </form>
+
+        <!-- Navigation Link -->
+        <div class="text-center mt-6">
+            <p class="text-gray-600">You can move <a href="{% url 'customer_logout' %}" class="text-nutrigreen-600 font-medium hover:underline">back to home</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

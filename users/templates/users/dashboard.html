@@ -1,0 +1,448 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- CSS Imports -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+<style>
+    /* Background */
+    .static-bg {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: #ffffff;
+        overflow: hidden;
+    }
+
+    /* Leaf-like Circles */
+    .leaf-circle-1 {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2310b981"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>') no-repeat center;
+        background-size: contain;
+        animation: floatLeaf 8s infinite ease-in-out;
+        top: 15%;
+        left: 20%;
+        opacity: 0.6;
+    }
+
+    .leaf-circle-2 {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2334d399"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>') no-repeat center;
+        background-size: contain;
+        animation: floatLeaf 10s infinite ease-in-out reverse;
+        top: 65%;
+        left: 75%;
+        opacity: 0.6;
+    }
+
+    @keyframes floatLeaf {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(40px, -50px) rotate(15deg); }
+        100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    /* Pulsing Circles */
+    .pulse-circle-1 {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        background: rgba(16, 185, 129, 0.2);
+        border-radius: 50%;
+        animation: pulse 5s infinite ease-in-out;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    @keyframes pulse {
+        0% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+        50% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
+        100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+    }
+
+    /* Navigation Bar */
+    .glass-nav {
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        z-index: 50;
+    }
+
+    /* Improved Logo Visibility */
+    .nav-logo {
+        background: linear-gradient(90deg, #10b981, #0ea5e9);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: none;
+        font-weight: 600;
+    }
+
+    /* Profile Dropdown */
+    .profile-dropdown {
+        color: #374151;
+    }
+
+    .profile-dropdown:hover {
+        color: #10b981;
+    }
+
+    .profile-chevron {
+        color: #6b7280;
+        transition: transform 0.2s ease;
+    }
+
+    /* Glass Card Effects */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Sidebar */
+    .side-nav {
+        position: sticky;
+        top: 64px;
+        height: calc(100vh - 64px);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(240, 255, 255, 0.9));
+    }
+
+    /* Shop Card */
+    .shop-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .shop-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .shop-image {
+        transition: transform 0.5s ease;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .shop-card:hover .shop-image {
+        transform: scale(1.06);
+    }
+
+    /* Profile Image */
+    .profile-img {
+        position: relative;
+    }
+
+    .profile-img::after {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        background: linear-gradient(45deg, #34d399, #22d3ee, #34d399);
+        background-size: 200% 200%;
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        animation: glowRotate 3s linear infinite;
+        z-index: -1;
+    }
+
+    .profile-img:hover::after {
+        opacity: 0.5;
+    }
+
+    @keyframes glowRotate {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Form Inputs */
+    .form-input {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(209, 213, 219, 0.2);
+        border-radius: 8px;
+        padding: 0.6rem 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        font-size: 0.9rem;
+        color: #374151;
+    }
+
+    .form-input:focus {
+        border-color: #34d399;
+        box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.25);
+        outline: none;
+    }
+
+    /* Buttons */
+    .btn-gradient {
+        background: linear-gradient(90deg, #34d399, #22d3ee);
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        font-weight: 500;
+        color: #fff;
+    }
+
+    .btn-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+    }
+
+    /* Dropdown Menu */
+    .dropdown-menu {
+        background: rgba(255, 255, 255, 0.98);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        z-index: 60;
+        display: none; /* Hidden by default */
+    }
+</style>
+
+<!-- Background with Floating Elements -->
+<div class="static-bg">
+    <div class="leaf-circle-1"></div>
+    <div class="leaf-circle-2"></div>
+    <div class="pulse-circle-1"></div>
+</div>
+
+<div class="min-h-screen relative" x-data="{ activeSection: 'shops' }">
+    <!-- Navigation Bar -->
+    <nav class="glass-nav sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <a href="#" class="nav-logo text-xl font-bold tracking-tight">
+                    <i class="fas fa-leaf mr-1.5"></i>DietWorld
+                </a>
+                <div class="flex items-center space-x-4">
+                    <!-- Profile Dropdown - Fixed Version -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" 
+                                @click.outside="open = false"
+                                class="flex items-center space-x-2 focus:outline-none">
+                            <div class="profile-img w-9 h-9 rounded-full overflow-hidden border-2 border-green-500">
+                                <img src="{% if request.user.customer.profile_photo %}{{ request.user.customer.profile_photo.url }}{% else %}/static/default-avatar.png{% endif %}"
+                                alt="Profile" 
+                                class="w-full h-full object-cover">
+                           
+                            </div>
+                            <span class="font-medium hidden sm:inline text-base">{{ request.user.username }}</span>
+                            <i class="fas fa-chevron-down text-sm transition-transform duration-200" 
+                               :class="{ 'rotate-180': open }"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div x-show="open" 
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50"
+                             style="display: none;">
+                            <div class="py-1">
+                                <a @click="activeSection = 'profile'; open = false"
+                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer">
+                                    <i class="fas fa-user mr-2 text-green-500"></i> Profile
+                                </a>
+                                <a href="{% url 'customer_logout' %}" 
+                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                                    <i class="fas fa-sign-out-alt mr-2 text-red-500"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6 grid lg:grid-cols-12 gap-6">
+        <!-- Sidebar -->
+        <div class="lg:col-span-3">
+            <div class="side-nav glass-card p-4">
+                <nav class="space-y-2">
+                    <a href="#" @click.prevent="activeSection = 'shops'" 
+                       :class="{'bg-green-100 text-green-600': activeSection === 'shops'}"
+                       class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-green-50">
+                        <i class="fas fa-store w-5 text-green-500"></i>
+                        <span class="ml-2 font-medium text-base">Shops</span>
+                    </a>
+                    <a href="#" @click.prevent="activeSection = 'profile'" 
+                       :class="{'bg-green-100 text-green-600': activeSection === 'profile'}"
+                       class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-green-50">
+                        <i class="fas fa-user w-5 text-teal-500"></i>
+                        <span class="ml-2 font-medium text-base">Profile</span>
+                    </a>
+                    <a href="{% url 'view_cart' %}" 
+                       class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-green-50">
+                        <i class="fas fa-shopping-cart w-5 text-lime-500"></i>
+                        <span class="ml-2 font-medium text-base">Cart</span>
+                        {% if cart_count > 0 %}
+                        <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">{{ cart_count }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'order_history' %}" 
+                       class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-green-50">
+                        <i class="fas fa-history w-5 text-amber-500"></i>
+                        <span class="ml-2 font-medium text-base">Order History</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="lg:col-span-9 space-y-6">
+            <!-- Shops Section -->
+            <div x-show="activeSection === 'shops'">
+                <div class="glass-card p-6 mb-6">
+                    <h2 class="text-2xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Explore Healthy Shops</h2>
+                    <p class="text-gray-600 mt-1 mb-4 text-sm">Discover organic and diet-friendly stores near you</p>
+                    <form method="get" class="max-w-xs relative">
+                        <select name="location" class="form-input pr-10 text-gray-700 text-sm" onchange="this.form.submit()">
+                            <option value="">All Locations</option>
+                            {% for location in locations %}
+                            <option value="{{ location }}" {% if location == selected_location %}selected{% endif %}>{{ location }}</option>
+                            {% endfor %}
+                        </select>
+                        <i class="fas fa-map-marker-alt absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 text-sm"></i>
+                    </form>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for shop in shops %}
+                    <div class="shop-card glass-card">
+                        <div class="h-40 relative">
+                            <img src="{{ shop.profile_photo.url|default:'/static/default-shop.png' }}" 
+                                 alt="{{ shop.shop_name }}" 
+                                 class="shop-image h-full w-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent"></div>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <h3 class="text-base font-semibold text-gray-800 flex items-center">
+                                <i class="fas fa-store mr-1.5 text-green-500 text-sm"></i>
+                                {{ shop.shop_name }}
+                            </h3>
+                            <p class="text-gray-600 text-xs flex items-center">
+                                <i class="fas fa-map-marker-alt mr-1.5 text-green-500 text-sm"></i>
+                                {{ shop.location }}
+                            </p>
+                            <a href="{% url 'shop_products' shop.id %}" 
+                               class="btn-gradient w-full block text-center text-white px-3 py-1.5 text-sm">
+                                Explore <i class="fas fa-arrow-right ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div x-show="activeSection === 'profile'">
+                <div class="glass-card p-6">
+                    <h2 class="text-2xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent mb-6">Your Profile</h2>
+                    <form method="post" enctype="multipart/form-data" class="grid md:grid-cols-3 gap-6">
+                        {% csrf_token %}
+                        <div class="space-y-4">
+                            <div class="profile-img aspect-square rounded-xl overflow-hidden shadow-lg">
+                                {% if request.user.customer.profile_photo %}
+                                <img src="{{ request.user.customer.profile_photo.url }}" alt="Profile" class="w-full h-full object-cover">
+                                {% else %}
+                                <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                                    <i class="fas fa-user text-4xl text-gray-400"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="text-center">
+                                <h3 class="font-semibold text-base text-gray-800">{{ request.user.username }}</h3>
+                                <p class="text-gray-600 text-xs mt-1">{{ request.user.email }}</p>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2 space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Username</label>
+                                    <div class="form-input bg-gray-100 text-gray-700 cursor-not-allowed" readonly>{{ request.user.username }}</div>
+                                </div>
+                                <div>
+                                    <label for="{{ profile_form.email.id_for_label }}" class="block text-xs font-medium text-gray-700 mb-1">Email</label>
+                                    <input type="email" id="{{ profile_form.email.id_for_label }}" name="email" value="{{ request.user.email }}" class="form-input">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="{{ profile_form.profile_photo.id_for_label }}" class="block text-xs font-medium text-gray-700 mb-1">Profile Photo</label>
+                                <input type="file" id="{{ profile_form.profile_photo.id_for_label }}" name="profile_photo" class="form-input">
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="{{ profile_form.phone_number.id_for_label }}" class="block text-xs font-medium text-gray-700 mb-1">Phone Number</label>
+                                    <input type="text" id="{{ profile_form.phone_number.id_for_label }}" name="phone_number" value="{{ profile_form.phone_number.value|default:'' }}" class="form-input">
+                                </div>
+                                <div>
+                                    <label for="{{ profile_form.address.id_for_label }}" class="block text-xs font-medium text-gray-700 mb-1">Address</label>
+                                    <input type="text" id="{{ profile_form.address.id_for_label }}" name="address" value="{{ profile_form.address.value|default:'' }}" class="form-input">
+                                </div>
+                            </div>
+                            <div class="flex justify-end gap-3">
+                                <button type="button" onclick="window.location.reload()" class="px-4 py-1.5 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Cancel</button>
+                                <button type="submit" class="btn-gradient px-4 py-1.5 text-white text-sm">Save Changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Load Alpine.js at the BOTTOM of the body -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.5/dist/cdn.min.js" defer></script>
+
+<!-- Fallback JavaScript for dropdown -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if Alpine.js is loaded
+        if (typeof Alpine === 'undefined') {
+            // Manual dropdown implementation
+            const profileButton = document.querySelector('.relative button');
+            const dropdownMenu = document.querySelector('.relative [x-show]');
+            
+            if (profileButton && dropdownMenu) {
+                profileButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isVisible = dropdownMenu.style.display === 'block';
+                    dropdownMenu.style.display = isVisible ? 'none' : 'block';
+                });
+                
+                // Close when clicking outside
+                document.addEventListener('click', function() {
+                    dropdownMenu.style.display = 'none';
+                });
+                
+                // Prevent dropdown from closing when clicking inside
+                dropdownMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+        }
+    });
+</script>
+
+{% endblock %}

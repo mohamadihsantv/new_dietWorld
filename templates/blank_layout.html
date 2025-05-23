@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DietWorld</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        nutrigreen: {
+                            50: '#f0fff4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        nutriblue: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-poppins bg-gradient-to-br from-nutrigreen-50 to-nutriblue-50 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row">
+        <!-- Branding Section -->
+        <div class="w-full md:w-1/2 bg-gradient-to-br from-nutrigreen-100 to-nutriblue-100 p-8 flex flex-col items-center justify-center">
+            <!-- Custom Diet/Nutrition Logo -->
+            <div class="flex flex-col items-center mb-6">
+                <div class="relative mb-4">
+                    <!-- Plate with food logo -->
+                    <div class="w-20 h-20 rounded-full bg-white shadow-lg flex items-center justify-center">
+                        <div class="relative">
+                            <!-- Plate -->
+                            <div class="w-16 h-16 rounded-full bg-gray-100 border-4 border-nutrigreen-300 flex items-center justify-center">
+                                <!-- Food items -->
+                                <div class="absolute top-3 left-4 w-3 h-3 rounded-full bg-nutrigreen-500"></div>
+                                <div class="absolute top-4 right-4 w-4 h-2 rounded-full bg-nutriblue-400 transform rotate-45"></div>
+                                <div class="absolute bottom-5 left-5 w-5 h-2 rounded-full bg-yellow-400 transform -rotate-12"></div>
+                                <div class="absolute bottom-4 right-5 w-2 h-4 rounded-full bg-red-400"></div>
+                                <!-- Fork and spoon -->
+                                <div class="absolute -bottom-2 -left-2 w-1 h-6 bg-gray-400 rounded transform rotate-12"></div>
+                                <div class="absolute -bottom-2 -right-2 w-1 h-6 bg-gray-400 rounded transform -rotate-12"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="text-3xl font-bold text-nutrigreen-800">Diet<span class="text-nutriblue-600">World</span></h1>
+                <p class="text-nutrigreen-600 font-medium mt-1">Healthy Living</p>
+            </div>
+            
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2 text-center">Your Health Journey Starts Here</h2>
+            <p class="text-gray-600 text-center max-w-md">Track your nutrition, manage your diet, and achieve your wellness goals with our comprehensive platform.</p>
+            
+            <div class="mt-8 flex justify-center">
+                <!-- Nutrition icons -->
+                <div class="flex space-x-6">
+                    <div class="text-nutrigreen-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="text-xs text-center mt-1">Calories</p>
+                    </div>
+                    <div class="text-nutrigreen-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        <p class="text-xs text-center mt-1">Tracking</p>
+                    </div>
+                    <div class="text-nutrigreen-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <p class="text-xs text-center mt-1">Progress</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Login Section -->
+        <div class="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
+            <h2 class="text-2xl font-bold text-gray-800 mb-1">Welcome Back</h2>
+            <p class="text-gray-500 mb-8">Please select your login option</p>
+            
+            <div class="space-y-4">
+                <a href="{% url 'user_login' %}" class="block w-full bg-nutrigreen-500 hover:bg-nutrigreen-600 text-white px-6 py-3 rounded-lg transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Customer Login
+                </a>
+                
+                <a href="{% url 'shop_login' %}" class="block w-full bg-nutriblue-500 hover:bg-nutriblue-600 text-white px-6 py-3 rounded-lg transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    Shop Login
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
