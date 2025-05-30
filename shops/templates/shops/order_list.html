@@ -89,6 +89,29 @@
     .btn-white:hover {
         background-color: #f3f4f6;
     }
+
+    /* New styles for customer info */
+    .customer-info {
+        background-color: #f8fafc;
+        border-left: 4px solid var(--primary);
+        padding: 12px;
+        margin-top: 8px;
+        border-radius: 0 0 6px 6px;
+    }
+    
+    .customer-info p {
+        margin-bottom: 4px;
+        font-size: 0.875rem;
+    }
+    
+    .customer-info-label {
+        font-weight: 500;
+        color: var(--dark);
+    }
+    
+    .customer-info-value {
+        color: #4b5563;
+    }
 </style>
 
 <div class="min-h-screen flex">
@@ -180,7 +203,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-dark">#{{ order.id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-dark">{{ order.customer.user.username }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ order.created_at|date:"M d, Y" }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-dark">${{ order.total_price }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-dark">₹{{ order.total_price }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-3 py-1 rounded-full text-xs font-medium
                                     {% if order.status == 'Delivered' %}bg-green-100 text-green-700
@@ -201,9 +224,9 @@
                                                 {% if item.species %}
                                                 <p class="text-xs text-gray-600">Species: {{ item.species.name }}</p>
                                                 {% endif %}
-                                                <p class="text-xs text-gray-600">Price: ${{ item.product.price }}</p>
+                                                <p class="text-xs text-gray-600">Price: ₹{{ item.product.price }}</p>
                                             </div>
-                                            <span class="text-sm">${{ item.total_price }}</span>
+                                            <span class="text-sm">₹{{ item.total_price }}</span>
                                         </div>
                                     </li>
                                     {% endfor %}
@@ -214,6 +237,31 @@
                                 class="inline-flex items-center px-3 py-1.5 rounded-md shadow-sm btn-blue">
                                     <i class="fas fa-edit mr-1"></i> Update
                                 </a>
+                            </td>
+                        </tr>
+                        <!-- Customer Information Row - Added below each order -->
+                        <tr>
+                            <td colspan="7" class="px-6 py-3">
+                                <div class="customer-info">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <p><span class="customer-info-label">Phone:</span> 
+                                                <span class="customer-info-value">{{ order.customer.phone_number|default:"Not provided" }}</span>
+                                            </p>
+                                            <p><span class="customer-info-label">Email:</span> 
+                                                <span class="customer-info-value">{{ order.customer.user.email|default:"Not provided" }}</span>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p class="customer-info-label">Delivery Address:</p>
+                                            <div>
+                                                <p class="customer-info-value">
+                                                    {{ order.customer.address|default:"Not provided" }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}

@@ -426,7 +426,7 @@
                                             {{ order.status }}
                                         </span>
                                     </td>
-                                    <td class="text-gray-800">${{ order.total_price }}</td>
+                                    <td class="text-gray-800">{{ order.total_price }}</td>
                                     <td>
                                         <a href="{% url 'order_status' order.id %}" 
                                            class="btn-gradient inline-block px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">
